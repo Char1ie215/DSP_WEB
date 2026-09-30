@@ -45,6 +45,10 @@ with sync_playwright() as p:
         assert page.title() == 'Dynamic System Policy: Robust Visuomotor Policies via Gaussian Dynamic Fields'
         assert page.locator('.task-picker').count() == 0
         assert page.locator('#task-list > section').count() == 4
+        assert page.locator('#sweep-title').inner_text() == 'Sweep Ball'
+        assert page.locator('#task-sweep [data-role="description"]').is_hidden()
+        for task in ['cola', 'drawer', 'coffee']:
+            assert page.locator(f'#task-{task} [data-role="description"]').is_visible()
         assert page.locator('#task-list video').count() == 8
         assert page.locator('table').count() == 0
         assert page.locator('#results, .task-results, .paper-section').count() == 0

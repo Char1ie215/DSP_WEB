@@ -2,7 +2,7 @@
 (() => {
   const project = window.DSP_PROJECT;
   const tasks = {
-    sweep: { title: 'Sweep Ball', description: 'A Franka robot lifts a ball with a scoop and deposits it into a basket.', captions: ['Approach the ball', 'Reposition the scoop', 'Deposit the ball'] },
+    sweep: { title: 'Sweep Ball', description: '', captions: ['Approach the ball', 'Reposition the scoop', 'Deposit the ball'] },
     cola: { title: 'Pick Cola', description: 'A Franka robot places a cola can onto a designated plate after a manual perturbation.', captions: ['Approach the can', 'External perturbation', 'Place the can'] },
     drawer: { title: 'Place Bottle & Close Drawer', description: 'A Franka robot places a bottle inside a drawer and closes the drawer.', captions: ['Approach the bottle', 'External perturbation', 'Close the drawer'] },
     coffee: { title: 'Coffee Preparation', description: 'A Franka and an ARX robot perform complementary subtasks, with interaction-induced deviations during execution.', captions: ['Prepare the milk', 'Interaction-induced deviation', 'Add coffee powder'] }
@@ -57,6 +57,7 @@
     title.textContent = data.title;
     section.setAttribute('aria-labelledby', title.id);
     section.querySelector('[data-role="description"]').textContent = data.description;
+    section.querySelector('[data-role="description"]').hidden = !data.description;
     section.querySelector('.playback-controls').setAttribute('aria-label', `${data.title} playback controls`);
     const status = section.querySelector('.playback-status');
     const media = project.videos[task] || {};
