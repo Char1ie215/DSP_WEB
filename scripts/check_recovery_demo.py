@@ -145,6 +145,7 @@ with sync_playwright() as p:
             cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
         else: page.mouse.up()
         page.locator('#demo-pause').click()
+        page.locator('#recovery-canvas').scroll_into_view_if_needed()
         page.wait_for_function('DSP_DEMO.model.position[1] !== '+str(held['position'][1]))
         page.locator('#demo-pause').click()
         page.evaluate('''() => {

@@ -39,21 +39,19 @@ with sync_playwright() as p:
         assert page.locator('#paper-link').get_attribute('href') == 'static/papers/paper.pdf'
         assert page.locator('#fullVideo-link').is_visible()
         assert page.locator('#fullVideo-link').get_attribute('href') == 'static/videos/dsp-overview.mp4'
-        assert page.locator('#teaser-video').get_attribute('src') == 'static/videos/coffee-success.mp4'
+        assert page.locator('#teaser-video').get_attribute('src') == 'static/videos/dsp-overview.mp4'
+        assert page.locator('#teaser-video').get_attribute('poster') == 'static/images/videos/overview.jpg'
+        assert page.locator('#teaser-download').get_attribute('href') == 'static/videos/dsp-overview.mp4'
         assert page.title() == 'Dynamic System Policy: Robust Visuomotor Policies via Gaussian Dynamic Fields'
         assert page.locator('.task-picker').count() == 0
         assert page.locator('#task-list > section').count() == 4
         assert page.locator('#task-list video').count() == 8
-        assert page.locator('.data-table').count() == 9
-        for table in page.locator('.data-table').all():
-            bounds = table.bounding_box()
-            assert abs(bounds['x'] + bounds['width'] / 2 - width / 2) < 2, table.get_attribute('id')
-        for note in page.locator('.task-result-note').all():
-            bounds = note.bounding_box()
-            assert abs(bounds['x'] + bounds['width'] / 2 - width / 2) < 2
-        assert page.locator('#task-list .data-table').count() == 4
-        assert page.locator('#results .data-table').count() == 5
-        assert page.locator('#results-coffee thead th').all_text_contents() == ['Method', 'Successes']
+        assert page.locator('table').count() == 0
+        assert page.locator('#results, .task-results, .paper-section').count() == 0
+        assert page.locator('.method-figure').count() == 1
+        assert page.locator('#interactive-title').inner_text() == 'What Is a Dynamical Field?'
+        assert page.locator('#recovery-canvas').is_visible()
+        assert page.evaluate('typeof window.DSP_RESULTS') == 'undefined'
         previous_bottom = 0
         for task in ["sweep", "cola", "drawer", "coffee"]:
             section = page.locator(f'#task-{task}')
@@ -79,7 +77,7 @@ with sync_playwright() as p:
                 assert first['y'] + first['height'] <= second['y']
         page.locator('#teaser-video').evaluate('(v) => {v.muted = true; return v.play();}')
         page.wait_for_function("document.getElementById('teaser-video').currentTime > 0.1")
-        assert abs(page.locator('#teaser-video').evaluate('(v) => v.duration') - 16.5) < 0.1
+        assert abs(page.locator('#teaser-video').evaluate('(v) => v.duration') - 168.033) < 0.1
         page.locator('#teaser-video').evaluate('(v) => {v.pause(); v.currentTime = 0;}')
         for link in page.locator("a[href]").all():
             href = link.get_attribute("href")
@@ -91,9 +89,8 @@ with sync_playwright() as p:
         page.screenshot(path=str(OUTPUT / f"{name}.png"), full_page=True)
         page.screenshot(path=str(OUTPUT / f"{name}-viewport.png"))
         page.locator('#task-list').screenshot(path=str(OUTPUT / f'{name}-videos.png'))
-        page.locator('#results').screenshot(path=str(OUTPUT / f'{name}-results.png'))
-        page.locator('#results-sweep').screenshot(path=str(OUTPUT / f'{name}-real-results.png'))
+        page.locator('#interactive-recovery').screenshot(path=str(OUTPUT / f'{name}-field.png'))
         assert not errors, errors
-        print(f"PASS {name}: authors, paper/full video links, teaser playback, four stacked tasks, 8 clips, independent controls, responsive columns, links, overflow, console")
+        print(f"PASS {name}: authors, 168-second overview playback, paper link, no tables/scope, one method figure, field explanation, four tasks, 8 clips, controls, links, overflow, console")
         page.close()
     browser.close()

@@ -1,6 +1,6 @@
 # DSP Project Website
 
-Private working draft of the Dynamic System Policy research website.
+Public Dynamic System Policy research website: https://char1ie215.github.io/DSP_WEB/.
 Plain HTML, CSS and JavaScript; no package manager or build step is required.
 The page adapts the VisualForce website source at the user's request.
 See `SOURCE.md` for provenance and the permission check required before release.
@@ -18,11 +18,11 @@ Visit http://127.0.0.1:8000. Do not expose this server outside localhost.
 
 ## Files
 
-- `index.html`: project narrative, figures, task results and simulation/ablation sections.
+- `index.html`: concise project overview, one method figure, field explanation, interactive recovery and experiment videos.
 - `static/css/index.css`: original VisualForce stylesheet.
 - `static/css/dsp.css`: DSP-specific responsive overrides.
 - `static/js/project.js`: confirmed title, authors, affiliations, links and video paths.
-- `static/js/results.js`: exact reported values from manuscript Tables I-IV and the native table renderer.
+- `static/js/results.js`: archived manuscript Tables I-IV and renderer; no longer loaded by the homepage.
 - `static/js/index.js`: metadata rendering, four stacked task sections and per-task paired playback.
 - `static/images/`: extracted original experimental frames and rendered figures.
 - `static/figures/`: downloadable method figure PDFs, not the paper.
@@ -54,9 +54,9 @@ author designation has been supplied or inferred.
 
 ## Videos
 
-The homepage teaser uses the 16.5-second `coffee-success.mp4` Franka--ARX
-demonstration, with its existing presentation speed unchanged. The Full video
-button opens the complete presentation. All four task sections remain below.
+The homepage player and Full video button both use the complete 168-second
+`dsp-overview.mp4` presentation, unchanged. The player does not autoplay, mute
+or loop the presentation. All four paired task-video sections remain below.
 
 `static/videos/dsp-overview.mp4` is a byte-for-byte copy of the supplied
 `Downloads/ICRA2027_DSP_video_under20MB.mp4` (168 seconds, about 17.4 MB).
@@ -134,11 +134,14 @@ in `static/icons/LICENSE`.
 Experimental images are extracted without raster editing from slide 1 of
 `dsp_rollout.pptx` (three original frames per task). The middle Sweep Ball frame
 shows repositioning, not the initial external push; its caption reflects this.
-The teaser poster is a frame from the coffee-preparation demonstration.
+The homepage poster is a frame from the full project presentation.
 
 The prediction and recovery figures use the user-supplied
 `Downloads/dsp_method.pdf` and `Downloads/recovery.pdf`, updated on 2026-09-29.
 The downloadable PDFs are unchanged copies; PNG previews are rendered from them.
+Only the prediction figure is displayed on the simplified homepage; the
+recovery figure is retained as an asset but replaced on the page by the
+interactive field demonstration. No original media files have been deleted.
 
 LIBERO ablation values (11.84%, 9.80%, 49.64%) match the final aggregate preserved
 in the local research repository at `paper/evidence/sim_final_20260914/`.
@@ -146,13 +149,10 @@ They are pooled success rates across five evaluation replicates, not five
 independently trained models. No claims of statistical significance are made.
 
 All four tables from `Downloads/ICRA2027_DSP.pdf` (pages 5-6) were transcribed
-on 2026-09-29. Table III is split across the three single-arm video sections;
-Table IV appears beneath coffee preparation. Table I is split by benchmark in
-Results, followed by both Table II ablations. The 55 success entries and 12
-median push distances retain their original precision. No error bars were added.
-Differences in achieved push distance and incomplete push-target attainment are
-disclosed. Raw Action's 9.28% is not conflated with paired-policy direct
-execution's 11.84%. The scaling comparison uses Ours (BSP) without recovery.
+on 2026-09-29. At the user's request, all nine displayed tables, their results
+commentary and the Scope section have been removed from the homepage.
+The unchanged paper remains linked for full results. The archived 55 success
+entries and 12 median push distances retain their original precision.
 
 Verify the numbers and browser rendering with:
 
@@ -161,9 +161,9 @@ py scripts/check_results.py
 py scripts/check_site.py
 ```
 
-The first check compares every value to the supplied PDF and checks all nine
-rendered tables. It requires the PDF at its original Downloads path, PyMuPDF,
-Playwright, and Microsoft Edge. Browser checks cover desktop and mobile layouts,
+The first check compares archived values to the bundled paper and confirms that
+the homepage has no tables. It requires PyMuPDF, Playwright, and Microsoft Edge.
+Browser checks cover desktop and mobile layouts,
 the eight experiment clips, per-task controls, and local links.
 
 ## Before Public Release
@@ -178,10 +178,9 @@ the eight experiment clips, per-task controls, and local links.
 
 ## Privacy
 
-No deployment workflow is included. Do not enable GitHub Pages or change the
-repository visibility until public release is approved. `noindex, nofollow`
-is only a crawler hint, NOT access control. A private repository does not by
-itself make a deployed website private.
+The user approved public release. GitHub Pages publishes the root of `main`.
+The homepage permits indexing and provides a canonical URL and `sitemap.xml`;
+search engines still decide when and whether to index it.
 
 No analytics or external scripts are loaded. Like the reference site, the page
 requests Source Sans 3 from Google Fonts, with local system-font fallbacks.

@@ -26,8 +26,8 @@ window.DSP_PROJECT = {
   paper: 'static/papers/paper.pdf',
   code: '',
   fullVideo: 'static/videos/dsp-overview.mp4',
-  teaser: 'static/videos/coffee-success.mp4',
-  teaserPoster: 'static/images/videos/coffee-success.jpg',
+  teaser: 'static/videos/dsp-overview.mp4',
+  teaserPoster: 'static/images/videos/overview.jpg',
   videos: {
     sweep: { success: 'static/videos/sweep-success.mp4', failure: 'static/videos/sweep-failure.mp4' },
     cola: { success: 'static/videos/cola-success.mp4', failure: 'static/videos/cola-failure.mp4' },

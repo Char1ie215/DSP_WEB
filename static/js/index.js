@@ -45,6 +45,7 @@
   if (project.teaser) {
     byId('teaser-video').src = project.teaser;
     byId('teaser-video').poster = project.teaserPoster;
+    byId('teaser-download').href = project.teaser;
     byId('teaser-video').hidden = false;
     byId('teaser-poster').hidden = true;
   }
@@ -99,42 +100,6 @@
     section.querySelector('[data-action="play"]').addEventListener('click', () => playBoth());
     section.querySelector('[data-action="pause"]').addEventListener('click', pause);
     section.querySelector('[data-action="replay"]').addEventListener('click', () => playBoth(true));
-    const result = window.DSP_RESULTS.realWorld[task];
-    const cooperation = task === 'coffee';
-    window.renderResultsTable(section.querySelector('.task-results'), {
-      id: `results-${task}`,
-      caption: `${data.title} / Table ${result.table} / Successes out of 10 scored trials per entry`,
-      headers: cooperation ? ['Method', 'Successes'] : ['Method', 'Nominal', 'Perturbed'],
-      methods: result.methods || window.DSP_RESULTS.methods,
-      rows: result.rows,
-      scoreColumns: cooperation ? [0] : [0, 1]
-    });
-    section.querySelector('.task-result-note').textContent = cooperation
-      ? 'The Franka policy changes between methods; the ARX policy stays fixed. Disturbances arise from robot interactions and avoidance maneuvers. Overall task completion is reported, without a nominal/perturbed split.'
-      : 'Nominal: no external perturbation. Perturbed: manually applied pushes. Success requires completing the entire task. Bold values mark the highest observed success in each column.';
     byId('task-list').append(section);
-  });
-  const results = window.DSP_RESULTS;
-  results.simulation.forEach(benchmark => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'table-wrap';
-    window.renderResultsTable(wrapper, {
-      id: `results-${benchmark.id}`,
-      caption: `${benchmark.title} / Table I`,
-      headers: ['Method', 'Nominal (%)', 'Perturbed (%)', 'Median push (cm)'],
-      methods: results.methods,
-      rows: benchmark.rows,
-      scoreColumns: [0, 1]
-    });
-    byId('simulation-results').append(wrapper);
-  });
-  ['recovery', 'scaling'].forEach(key => {
-    window.renderResultsTable(byId(`${key}-results`), {
-      id: `results-${key}`,
-      caption: key === 'recovery' ? 'Recovery strategy / Success rate (%)' : 'Candidates per query / Success rate (%)',
-      headers: [key === 'recovery' ? 'Execution strategy' : 'Candidates per query', 'Success (%)'],
-      ...results[key],
-      scoreColumns: [0]
-    });
   });
 })();

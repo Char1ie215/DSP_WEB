@@ -1,4 +1,4 @@
-"""Compare every reported table value against the supplied manuscript PDF."""
+"""Check archived table data against the paper; tables are not shown on the site."""
 from pathlib import Path
 import re
 
@@ -6,7 +6,7 @@ import fitz
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = Path.home() / 'Downloads' / 'ICRA2027_DSP.pdf'
+SOURCE = ROOT / 'static' / 'papers' / 'paper.pdf'
 with fitz.open(SOURCE) as document:
     page5 = document[4].get_text()
     page6 = document[5].get_text()
@@ -25,6 +25,8 @@ with sync_playwright() as p:
     )
     page = browser.new_page()
     page.goto((ROOT / 'index.html').as_uri())
+    assert page.locator('table').count() == 0
+    page.add_script_tag(path=str(ROOT / 'static' / 'js' / 'results.js'))
     data = page.evaluate('window.DSP_RESULTS')
     actual = {
         'I': [value for row in range(4) for benchmark in data['simulation'] for value in benchmark['rows'][row]],
@@ -35,13 +37,5 @@ with sync_playwright() as p:
     for key in expected:
         assert actual[key] == expected[key], (key, actual[key], expected[key])
         print(f'PASS manuscript Table {key}: {len(expected[key])} exact values')
-    tables = {item['id']: item for item in data['simulation']}
-    tables.update(data['realWorld'])
-    tables.update({key: data[key] for key in ['recovery', 'scaling']})
-    assert page.locator('.data-table').count() == 9
-    for key, table in tables.items():
-        rendered = page.locator(f'#results-{key} tbody td').all_text_contents()
-        assert rendered == [value for row in table['rows'] for value in row], key
-        assert page.locator(f'#results-{key} tbody th').all_text_contents() == table.get('methods', data['methods']), key
-    print('PASS all 9 rendered tables: method labels, 55 success entries, 12 push distances')
+    print('PASS archived data: 55 success entries, 12 push distances; no tables on homepage')
     browser.close()
