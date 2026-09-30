@@ -1,10 +1,15 @@
 from pathlib import Path
+import xml.etree.ElementTree as ET
 from playwright.sync_api import sync_playwright
 
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "test-results"
 OUTPUT.mkdir(exist_ok=True)
+PUBLIC_URL = "https://char1ie215.github.io/DSP_WEB/"
+assert [node.text for node in ET.parse(ROOT / "sitemap.xml").findall(
+    "{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
+)] == [PUBLIC_URL]
 
 with sync_playwright() as p:
     browser = p.chromium.launch(
@@ -16,6 +21,9 @@ with sync_playwright() as p:
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.goto((ROOT / "index.html").as_uri())
+        assert page.locator('meta[name="robots"]').get_attribute('content') == 'index, follow'
+        assert page.locator('link[rel="canonical"]').get_attribute('href') == PUBLIC_URL
+        assert page.locator('link[rel="sitemap"]').get_attribute('href') == 'sitemap.xml'
         page.evaluate("document.querySelectorAll('img').forEach(i => i.loading = 'eager')")
         page.locator("footer").scroll_into_view_if_needed()
         page.wait_for_function("Array.from(document.images).every(i => i.complete && i.naturalWidth > 0)")
