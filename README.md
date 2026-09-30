@@ -185,6 +185,20 @@ the eight experiment clips, per-task controls, and local links.
 - Confirm rights to publish every image, recording and paper.
 - Confirm permission to reuse the VisualForce website source (no explicit license found).
 
+## Search Discovery
+
+The homepage permits indexing and includes a canonical URL and `sitemap.xml`.
+The project-root hexadecimal `.txt` file is an IndexNow ownership-verification
+file, intentionally served publicly, not a GitHub or account credential.
+Keep it deployed while using its key for submissions. Because the site is hosted
+under `/DSP_WEB/`, IndexNow requests must include the full file URL as
+`keyLocation` and submit only URLs under that project path.
+
+IndexNow receipt means a URL notification was accepted, not that the page was
+crawled or indexed. Bing Webmaster Tools account verification and Google Search
+Console setup are separate; neither is configured by this file. See
+https://www.indexnow.org/documentation for the protocol and status codes.
+
 ## Privacy
 
 The user approved public release. GitHub Pages publishes the root of `main`.
