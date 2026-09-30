@@ -16,8 +16,9 @@
   const arrows = document.getElementById('demo-field');
   let width = 900, height = 450, scale = 1000, ox = 0, oy = 0;
   let visible = false, last = 0, accumulated = 0, pointer = null, lastPointer = null;
+  let fieldCache = null;
   const colors = {path:'#7c3bb0', tube:'rgba(44,157,115,.13)', candidate:'#259b91',
-    robot:'#c02b42', anchor:'#7c3bb0', field:'#158e94', trail:'#e79a39'};
+    robot:'#c02b42', anchor:'#7c3bb0', field:'#247a9d', trail:'#e79a39'};
   const labels = {predicting:'Prediction', selecting:'Candidate selection', executing:'Native execution',
     recovering:'Recovery / phase locked', replanning:'Replanning', complete:'Complete',
     'recovery-timeout':'Recovery timed out'};
@@ -37,6 +38,77 @@
     const [x,y]=screen(p); ctx.beginPath(); ctx.arc(x,y,radius,0,2*Math.PI);
     ctx.fillStyle='#fff'; ctx.fill(); ctx.strokeStyle=color; ctx.lineWidth=2; ctx.stroke();
   }
+  function fieldPaths() {
+    if (demo.state !== 'recovering' || !demo.anchor) return [];
+    if (fieldCache && fieldCache.anchor === demo.anchor && fieldCache.width === width) return fieldCache.paths;
+    const paths = [], occupied = new Set();
+    const spacing = width < 550 ? .042 : .026, step = .003;
+    const cell = p => `${Math.round(p[0]/spacing)},${Math.round(p[1]/spacing)}`;
+    const inside = p => p[0] >= .015 && p[0] <= .785 && p[1] >= .015 && p[1] <= .435;
+    const direction = p => {
+      const v = demo.velocity(p), speed = norm(v);
+      return speed > 1e-8 && Number.isFinite(speed) ? mul(v,1/speed) : null;
+    };
+    // Arc-length RK2 traces the existing field without changing its dynamics.
+    // Stop near the reference or other curves to keep converging lines readable.
+    function trace(seed, sign) {
+      const points = [seed], visited = new Set();
+      let p = seed;
+      for (let i=0; i<550; i++) {
+        if (norm(sub(p,demo.anchor)) < .012) break;
+        const d = direction(p);
+        if (!d) break;
+        const mid = direction(add(p,mul(d,sign*step/2)));
+        if (!mid) break;
+        const next = add(p,mul(mid,sign*step)), key = cell(next);
+        if (!inside(next) || occupied.has(key)) break;
+        if (key !== cell(p)) {
+          if (visited.has(key)) break;
+          visited.add(cell(p));
+        }
+        points.push(next); p = next;
+      }
+      return points;
+    }
+    const seeds = [];
+    for (let x=.025; x<.79; x+=spacing*2) seeds.push([x,.025],[x,.425]);
+    for (let y=.065; y<.42; y+=spacing*2) seeds.push([.025,y],[.775,y]);
+    for (let y=.065; y<.42; y+=spacing*2)
+      for (let x=.065; x<.77; x+=spacing*2) seeds.push([x,y]);
+    for (const seed of seeds) {
+      if (occupied.has(cell(seed))) continue;
+      const backward = trace(seed,-1), forward = trace(seed,1);
+      const points = backward.reverse().concat(forward.slice(1));
+      if (points.length < 24) continue;
+      paths.push(points);
+      points.forEach(p=>occupied.add(cell(p)));
+    }
+    fieldCache = {anchor:demo.anchor, width, paths};
+    return paths;
+  }
+  function drawField() {
+    if (!arrows.checked || demo.state !== 'recovering') return;
+    ctx.save(); ctx.lineCap='round'; ctx.lineJoin='round';
+    for (const points of fieldPaths()) {
+      ctx.globalAlpha=.62; line(points,colors.field,1.15);
+      ctx.globalAlpha=.95;
+      let distance=0, nextArrow=28;
+      for (let i=1; i<points.length; i++) {
+        const a=screen(points[i-1]), b=screen(points[i]);
+        distance+=Math.hypot(b[0]-a[0],b[1]-a[1]);
+        if (distance < nextArrow || norm(sub(points[i],demo.anchor)) < .02) continue;
+        const v=demo.velocity(points[i]), speed=norm(v);
+        if (speed < 1e-8) continue;
+        const d=mul(v,1/speed), size=width<550?5:6;
+        ctx.beginPath(); ctx.moveTo(...b);
+        ctx.lineTo(b[0]-d[0]*size-d[1]*size*.48,b[1]-d[1]*size+d[0]*size*.48);
+        ctx.lineTo(b[0]-d[0]*size+d[1]*size*.48,b[1]-d[1]*size-d[0]*size*.48);
+        ctx.closePath(); ctx.fillStyle=colors.field;ctx.fill();
+        nextArrow=distance+90;
+      }
+    }
+    ctx.restore();
+  }
   function draw() {
     ctx.clearRect(0,0,width,height);
     const preset=demo.preset, path=preset.path.map(p=>demo.world(p));
@@ -51,30 +123,22 @@
       .concat(path.map((p,i)=>sub(p,mul(normals[i],preset.radii[i]))).reverse());
     ctx.beginPath(); ribbon.forEach((p,i)=>{ const [x,y]=screen(p); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
     ctx.closePath(); ctx.fillStyle=colors.tube; ctx.fill();
+    drawField();
     if (candidates.checked || ['predicting','selecting'].includes(demo.state)) {
+      ctx.save();
+      if (demo.state==='recovering') ctx.globalAlpha=.35;
       preset.candidates.forEach((points,k)=>{
         if (k===preset.medoid) return;
         const member=preset.members.includes(k);
         line(points.slice(first).map(p=>demo.world(p)),member?'rgba(37,155,145,.30)':'rgba(135,143,151,.32)',1,member?[]:[4,5]);
       });
+      ctx.restore();
     }
     line(path,'#d5c9df',1.5);
     line(path.slice(first),colors.path,2.3,demo.anchor?[5,5]:[]);
     if (demo.anchor) {
       const prefix=path.slice(0,demo.lockedPhase+1).map(p=>add(p,demo.anchorOffset));
       line(prefix,colors.path,2.5);
-      if (arrows.checked && demo.state==='recovering') {
-        for(let x=.055;x<.79;x+=.048) for(let y=.045;y<.44;y+=.048) {
-          const p=[x,y], v=demo.velocity(p), length=norm(v);
-          if(length<1e-7 || norm(sub(p,demo.anchor))<.022) continue;
-          const a=screen(p), d=mul(v,1/length), size=Math.min(17,scale*.025);
-          const b=[a[0]+d[0]*size,a[1]+d[1]*size];
-          ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b);
-          ctx.moveTo(b[0]-d[0]*4-d[1]*2.8,b[1]-d[1]*4+d[0]*2.8);
-          ctx.lineTo(...b); ctx.lineTo(b[0]-d[0]*4+d[1]*2.8,b[1]-d[1]*4-d[0]*2.8);
-          ctx.strokeStyle='rgba(21,142,148,.36)';ctx.lineWidth=1;ctx.stroke();
-        }
-      }
       line(demo.trail,colors.trail,2);
       ring(demo.anchor,7,colors.anchor);
     }
@@ -146,6 +210,6 @@
     }
     last=time;requestAnimationFrame(frame);
   }
-  window.DSP_DEMO={model:demo,draw,screen:p=>screen(p)};
+  window.DSP_DEMO={model:demo,draw,screen:p=>screen(p),fieldPaths};
   resize();requestAnimationFrame(frame);
 })();

@@ -122,6 +122,15 @@ the entire ribbon. The field shown during recovery comes only from the locked
 prefix. The evaluator falls back to the source executor's reference feedback when
 the prefix is empty.
 
+Recovery visualization uses continuous streamlines with directional arrowheads,
+inspired by the plots in Nadia Figueroa's `nbfigueroa/ds-opt` examples. No reference
+images or code are embedded. Curves are traced from the existing `demo.velocity`
+using arc-length midpoint integration; normalization changes only the drawing's
+sampling, not the recovery integrator. Geometry is cached for the locked reference
+and viewport width. Curves stop near other curves or the reference to avoid
+overplotting; they are not additional predicted trajectories or new attractors.
+The field remains hidden until recovery is triggered, with sparser lines on mobile.
+
 Run `py scripts/check_recovery_demo.py` for numerical parity with all 588 exported
 Python reference evaluations, 72 convergence cases (including translated measured
 references), the smooth-tube descent inequality, accepted-state updates,

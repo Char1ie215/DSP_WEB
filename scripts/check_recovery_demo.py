@@ -128,6 +128,7 @@ with sync_playwright() as p:
         }''')
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
         before=page.evaluate('DSP_DEMO.model.snapshot()')
+        assert page.evaluate('DSP_DEMO.fieldPaths().length') == 0
         handle=page.locator('#eef-handle').bounding_box()
         start={'x':handle['x']+handle['width']/2,'y':handle['y']+handle['height']/2}
         target={'x':start['x']+min(width*.14,160),'y':start['y']-75}
@@ -140,6 +141,29 @@ with sync_playwright() as p:
         held=page.evaluate('DSP_DEMO.model.snapshot()')
         assert held['state']=='recovering' and held['dragging'], held
         assert held['phase']==before['phase'] and held['anchor']==held['acceptedPosition'], held
+        streamlines=page.evaluate('''() => {
+          const {model,fieldPaths}=DSP_DEMO;
+          const before=JSON.stringify(model.snapshot());
+          const paths=fieldPaths();
+          if(paths.length<12)throw Error('Too few streamlines');
+          if(fieldPaths()!==paths)throw Error('Field geometry not cached');
+          let segments=0,minCosine=1;
+          for(const points of paths)for(let i=1;i<points.length;i++) {
+            const a=points[i-1],b=points[i],mid=[(a[0]+b[0])/2,(a[1]+b[1])/2];
+            if(!b.every(Number.isFinite))throw Error('Nonfinite streamline');
+            const d=[b[0]-a[0],b[1]-a[1]],v=model.velocity(mid);
+            const cosine=(d[0]*v[0]+d[1]*v[1])/(Math.hypot(...d)*Math.hypot(...v));
+            if(!(cosine>.8))throw Error('Streamline disagrees with recovery field');
+            minCosine=Math.min(minCosine,cosine);segments++;
+          }
+          if(before!==JSON.stringify(model.snapshot()))throw Error('Rendering changed recovery state');
+          return {curves:paths.length,segments,minCosine};
+        }''')
+        print(f'PASS {name} streamlines: {streamlines}',flush=True)
+        with_field=page.locator('canvas').evaluate('c=>c.toDataURL()')
+        page.evaluate("document.getElementById('demo-field').checked=false;DSP_DEMO.draw()")
+        assert page.locator('canvas').evaluate('c=>c.toDataURL()') != with_field
+        page.evaluate("document.getElementById('demo-field').checked=true;DSP_DEMO.draw()")
         page.locator('#interactive-recovery').screenshot(path=str(OUTPUT/f'{name}-interactive-held.png'))
         if touch:
             cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
