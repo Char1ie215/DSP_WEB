@@ -35,7 +35,7 @@
         <a class="button" id="code-link" hidden>Code <span aria-hidden="true">&nearr;</span></a>
         <a class="button secondary" href="#video">Real-world experiments <span aria-hidden="true">&darr;</span></a>
       </div>
-      <nav class="section-links" aria-label="Page sections"><a href="#abstract">Overview</a><a href="#method">Method</a><a href="#interactive-recovery">Dynamical Field</a><a href="#video">Experiments</a></nav>
+      <nav class="section-links" aria-label="Page sections"><a href="#method">Method</a><a href="#interactive-recovery">Dynamical Field</a><a href="#video">Experiments</a></nav>
     </header>
     <section class="container hero-demo" aria-labelledby="teaser-title">
       <p class="teaser-summary" id="teaser-title"><strong>TL;DR:</strong> Recover from a disturbance before asking the policy to plan again.</p>
@@ -44,10 +44,6 @@
         <img id="teaser-poster" src="static/images/videos/overview.jpg" width="1152" height="720" alt="Dynamic System Policy project video" fetchpriority="high">
         <figcaption><span>Project video / 2:48</span><a id="teaser-download" href="static/videos/dsp-overview.mp4" download>Download video</a></figcaption>
       </figure>
-    </section>
-    <section class="container section abstract-section" id="abstract" aria-labelledby="abstract-title">
-      <h2 id="abstract-title">Why recover before replanning?</h2>
-      <p>A push can leave a robot in a state its policy was not trained to handle. Dynamic System Policy first guides the robot back toward supported motion, then replans from a new observation.</p>
     </section>
     <section class="section method-section" id="method" aria-labelledby="method-title">
       <div class="container"><div class="section-intro"><h2 id="method-title">Predict Commands and Motion Together</h2><p class="method-summary">Each prediction pairs controller commands with the motion expected to result. DSP selects a representative motion from the largest cluster and executes its paired commands; the cluster's spread defines a local support region.</p></div>

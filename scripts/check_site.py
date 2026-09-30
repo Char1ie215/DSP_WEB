@@ -50,6 +50,7 @@ with sync_playwright() as p:
         assert page.locator('#results, .task-results, .paper-section').count() == 0
         assert page.locator('.method-figure').count() == 1
         assert page.locator('#interactive-title').inner_text() == 'What Is a Dynamical Field?'
+        assert page.locator('#abstract, a[href="#abstract"]').count() == 0
         assert page.locator('#recovery-canvas').is_visible()
         assert page.evaluate('typeof window.DSP_RESULTS') == 'undefined'
         previous_bottom = 0
