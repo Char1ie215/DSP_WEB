@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Dynamic System Policy: Robust Visuomotor Policies via Gaussian Dynamic Fields.">
+  <meta name="theme-color" content="#ffffff">
+  <title>Dynamic System Policy: Robust Visuomotor Policies via Gaussian Dynamic Fields</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&amp;display=swap">
+  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="stylesheet" href="static/css/dsp.css">
+  <script defer src="static/js/project.js"></script>
+  <script defer src="static/js/results.js"></script>
+  <script defer src="static/js/index.js"></script>
+  <script defer src="static/js/recovery-data.js"></script>
+  <script defer src="static/js/recovery-core.js"></script>
+  <script defer src="static/js/recovery-demo.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <main id="main">
+    <header class="hero container" id="overview">
+      <h1 id="project-title"><span>Dynamic System Policy:</span><br>Robust Visuomotor Policies via Gaussian Dynamic Fields</h1>
+      <p class="authors" id="authors" hidden></p>
+      <p class="affiliations" id="affiliations" hidden></p>
+      <p class="equal-contribution" id="author-note" hidden></p>
+      <div class="hero-links">
+        <a class="button" id="paper-link" hidden>Read the paper <span aria-hidden="true">&nearr;</span></a>
+        <a class="button" id="fullVideo-link" hidden>Full video <span aria-hidden="true">&nearr;</span></a>
+        <a class="button" id="code-link" hidden>Code <span aria-hidden="true">&nearr;</span></a>
+        <a class="button secondary" href="#video">Real-world experiments <span aria-hidden="true">&darr;</span></a>
+      </div>
+      <nav class="section-links" aria-label="Page sections"><a href="#abstract">Abstract</a><a href="#method">Method</a><a href="#recovery">Recovery</a><a href="#interactive-recovery">Interactive Demo</a><a href="#video">Experiments</a><a href="#results">Results</a></nav>
+    </header>
+    <section class="container hero-demo" aria-labelledby="teaser-title">
+      <p class="teaser-summary" id="teaser-title"><strong>TL;DR:</strong> Predict commands and motion together, recover toward a fixed reference after a disturbance, and then replan.</p>
+      <figure class="teaser-video">
+        <video id="teaser-video" controls muted loop playsinline preload="none" poster="static/images/videos/coffee-success.jpg" aria-label="Franka and ARX coffee preparation demonstration" hidden></video>
+        <img id="teaser-poster" src="static/images/coffee-before.png" width="1440" height="1080" alt="Franka and ARX robots working on coffee preparation" fetchpriority="high">
+        <figcaption><span>Franka and ARX coffee preparation. Shown at the original presentation speed.</span><a href="static/videos/coffee-success.mp4" download>Download clip</a></figcaption>
+      </figure>
+    </section>
+    <section class="container section abstract-section" id="abstract" aria-labelledby="abstract-title">
+      <h2 id="abstract-title">Abstract</h2>
+      <p>Robot manipulation policies can fail when external perturbations push the robot away from its expected motion. Dynamic System Policy jointly predicts controller commands and end-effector pose trajectories. Commands drive normal execution, while sampled pose trajectories define local geometric support and provide geometry for a Gaussian recovery field. When intervention is triggered, the executor locks a reference pose and execution phase, recovers toward that reference, and replans from an updated observation. We evaluate recovery in simulation and on real-world manipulation tasks, including decentralized two-robot cooperation.</p>
+    </section>
+    <section class="container section motivation" aria-labelledby="motivation-title">
+      <div class="section-intro"><h2 id="motivation-title">Why recover before replanning?</h2></div>
+      <div class="motivation-copy"><p>A disturbance changes the robot's state. Immediately requesting a new prediction does not necessarily restore successful execution.</p><p>Controller commands and realized motion also serve different purposes. Under compliant contact, a commanded target can differ from the pose actually reached. DSP uses commands for execution and predicted motion for geometric feedback.</p></div>
+    </section>
+    <section class="section method-section" id="method" aria-labelledby="method-title">
+      <div class="container"><div class="section-intro"><h2 id="method-title">Method</h2><p>Paired predictions connect native command execution to geometric recovery.</p></div>
+        <ol class="pipeline">
+          <li><span>01 / Prediction</span><h3>Predict commands and motion together</h3><p>Each policy sample pairs a controller command sequence with a predicted end-effector pose trajectory.</p></li>
+          <li><span>02 / Selection</span><h3>Select a pair and estimate support</h3><p>Cluster the predicted trajectories and select a representative from the dominant cluster. Retain its paired commands for execution and estimate local geometric support from the cluster.</p></li>
+          <li><span>03 / Execution</span><h3>Execute native commands</h3><p>Monitor measured motion during execution. Selective intervention combines support departure with excessive motion innovation.</p></li>
+        </ol>
+        <figure class="method-figure"><a href="static/figures/prediction.pdf" target="_blank" rel="noopener" aria-label="Open the full-size prediction figure"><img src="static/images/prediction.png" alt="Joint prediction of motion and commands, dominant-cluster selection, local support estimation, and native execution" loading="lazy"></a><figcaption>Paired prediction, geometric selection, and native execution. <a href="static/figures/prediction.pdf">Full-size figure &nearr;</a></figcaption></figure>
+      </div>
+    </section>
+    <section class="section method-section" id="recovery" aria-labelledby="recovery-title">
+      <div class="container"><div class="section-intro"><h2 id="recovery-title">Recovery and Replanning</h2><p>When recovery begins, the executor fixes a measured reference pose and its execution phase. A geometry-based field guides recovery toward that reference before the policy is queried again.</p></div>
+        <figure class="method-figure"><a href="static/figures/recovery.pdf" target="_blank" rel="noopener" aria-label="Open the full-size recovery figure"><img src="static/images/recovery.png" alt="External perturbation, reference locking, Gaussian recovery field, and replanning from the updated observation" loading="lazy"></a><figcaption>Selective intervention and phase-locked recovery. Fields are schematic. <a href="static/figures/recovery.pdf">Full-size figure &nearr;</a></figcaption></figure>
+      </div>
+    </section>
+    <section class="container section" id="interactive-recovery" aria-labelledby="interactive-title">
+      <div class="section-intro"><h2 id="interactive-title">Interactive Recovery</h2><p class="note">Synthetic trajectories / Original recovery-field compiler / Position-only kinematics</p></div>
+      <div class="recovery-demo">
+        <div class="demo-readout"><span id="demo-status" role="status" aria-live="polite">Prediction</span><div><span id="demo-query">Query 1 / K = 16</span><span id="demo-phase">Phase 00 / 48</span></div></div>
+        <div class="demo-stage">
+          <canvas id="recovery-canvas" role="img" aria-label="Planar trajectory ensemble, local support, and a phase-locked recovery field"></canvas>
+          <button id="eef-handle" type="button" aria-label="End effector. Drag to perturb, or use arrow keys." title="Drag to perturb; arrow keys also move the end effector"><span></span></button>
+        </div>
+        <div class="demo-controls">
+          <div class="demo-buttons" role="group" aria-label="Playback and perturbation">
+            <button id="demo-pause" type="button" aria-label="Pause" title="Pause"><img src="static/icons/pause.svg" alt="" width="19" height="19"></button>
+            <button id="demo-reset" type="button" aria-label="Restart" title="Restart"><img src="static/icons/rotate-ccw.svg" alt="" width="19" height="19"></button>
+            <button id="demo-perturb" type="button" title="Apply an external displacement"><img src="static/icons/move-up-right.svg" alt="" width="19" height="19">Perturb</button>
+          </div>
+          <div class="demo-options"><label><input id="demo-candidates" type="checkbox" checked>Candidates</label><label><input id="demo-field" type="checkbox" checked>Recovery field</label></div>
+        </div>
+        <div class="demo-legend"><span><i class="legend-eef"></i>End effector</span><span><i class="legend-path"></i>Selected motion</span><span><i class="legend-tube"></i>Local support</span><span><i class="legend-anchor"></i>Locked reference</span></div>
+        <p class="note demo-disclosure">Preset candidates, not live policy inference. Support departure and excessive motion innovation trigger recovery toward the last accepted pose, with a fixed phase and smooth-tube CLF feedback. Orientation, contact, and gripper dynamics are not simulated.</p>
+      </div>
+    </section>
+    <section class="section experiments-section" id="video" aria-labelledby="video-title">
+      <div class="container"><div class="section-intro"><h2 id="video-title">Real-World Experiments</h2><p>Representative successful trials and failure cases across four tasks.</p></div>
+        <div id="task-list"></div>
+        <template id="task-template">
+          <section class="task-section">
+            <div class="task-heading"><div><h3 data-role="title"></h3><p data-role="description"></p></div></div>
+            <div class="video-grid">
+              <figure class="video-card success-card" data-outcome="success"><figcaption>Successful trial</figcaption><video controls muted playsinline preload="none"></video><div class="video-footer"><a download>Download video</a></div></figure>
+              <figure class="video-card failure-card" data-outcome="failure"><figcaption>Failure case</figcaption><video controls muted playsinline preload="none"></video><div class="video-footer"><a download>Download video</a></div></figure>
+            </div>
+            <div class="playback-row"><div class="playback-controls" role="group"><button data-action="play" type="button">Play both</button><button data-action="pause" class="secondary" type="button">Pause</button><button data-action="replay" class="secondary" type="button">Replay</button></div></div>
+            <p class="playback-status" role="status" aria-live="polite"></p>
+            <div class="table-wrap task-results"></div>
+            <p class="note task-result-note"></p>
+          </section>
+        </template>
+        <p class="note clip-note">Clips retain their presentation speeds; their durations are not task completion times. These are different trials, not a comparison between methods.</p>
+      </div>
+    </section>
+    <section class="container section results-section" id="results" aria-labelledby="results-title">
+      <div class="section-intro"><h2 id="results-title">Results</h2><p>Simulation results across three benchmarks and two action representations, followed by recovery and test-time sampling ablations.</p></div>
+      <div class="results-reading">
+        <p class="note">Raw Action and Action BSP predict controller commands only. Ours (RAW) and Ours (BSP) jointly predict commands and motion geometry, using discrete sequences and B-spline representations, respectively. Nominal means no external perturbation; perturbed trials use the benchmark's disturbance protocol. Bold values mark the highest observed success in each column.</p>
+        <h3>Simulation Benchmarks</h3>
+        <p class="note">Table I. Success rates (%), evaluated with 5 policy-sampling seeds and 50 episodes per seed per task: 2,500 attempts for LIBERO-10 and 250 for each of Lift and Square. These are evaluation seeds, not independently trained models.</p>
+      </div>
+      <div id="simulation-results"></div>
+      <p class="note results-reading">Push distances are medians measured at release in perturbed trials. The configured target is 20 cm, but achieved displacement differs across methods. Results compare complete closed-loop responses to a shared disturbance protocol, not recovery under identical achieved displacements. On Square, 137 Ours (RAW) attempts, zero Raw Action attempts, and four Action BSP attempts did not meet the push-target criterion; all remain in the success-rate denominator.</p>
+      <div class="ablation-results">
+        <section class="result-block" aria-labelledby="recovery-ablation-title">
+          <h3 id="recovery-ablation-title">Recovery Before Replanning</h3>
+          <p class="note">Table II / LIBERO-10 with perturbations / Paired RAW policy / K = 16 candidates per query / 2,500 attempts per strategy.</p>
+          <div class="table-wrap" id="recovery-results"></div>
+          <p class="note">Direct execution here uses the paired policy (11.84%), not the action-only Raw Action baseline in Table I (9.28%). Immediate replanning and recovery share the same intervention trigger. This evaluates the recovery procedure as a whole.</p>
+        </section>
+        <section class="result-block" aria-labelledby="scaling-ablation-title">
+          <h3 id="scaling-ablation-title">Test-Time Candidate Selection</h3>
+          <p class="note">Table II / LIBERO-10 without perturbations / Ours (BSP) / Direct execution without recovery.</p>
+          <div class="table-wrap" id="scaling-results"></div>
+          <p class="note">Increasing K from 1 to 16 improves success by 8.84 percentage points. This comparison measures candidate selection without recovery; it does not isolate the effect of sample count on recovery quality.</p>
+        </section>
+      </div>
+    </section>
+    <section class="paper-section section" aria-labelledby="paper-details-title"><div class="container reading-width"><h2 id="paper-details-title">Additional Details</h2><details><summary>Scope and limitations</summary><p>The support tube is estimated from a finite set of predictions, not a calibrated density region. Returning toward a reference pose does not restore object positions, a lost grasp, or altered contact conditions, and does not guarantee task success.</p></details></div></section>
+  </main>
+  <footer class="container site-footer"><a class="wordmark" href="#overview">Dynamic System Policy</a><span>Website adapted from <a href="https://visual-force.github.io/">VisualForce</a>.</span></footer>
+</body>
+</html>

@@ -1,0 +1,134 @@
+{
+  "overview": {
+    "source": "ICRA2027_DSP_video_under20MB.mp4",
+    "path": "static/videos/dsp-overview.mp4",
+    "operation": "byte-for-byte copy",
+    "duration": 168.03333333333333,
+    "width": 1152,
+    "height": 720,
+    "fps": 30.0,
+    "bytes": 17352664
+  },
+  "clips": {
+    "cola": {
+      "success": {
+        "deck": "ICRA2027_DSP_video_template.pptx",
+        "slide": 12,
+        "embedded": "ppt/media/media10.mp4",
+        "source_sha256": "57c2a990f33bc61c8f9388dda0ef2b132905b51ad62fb6f1f7fa3a90be64d155",
+        "path": "static/videos/cola-success.mp4",
+        "poster": "static/images/videos/cola-success.jpg",
+        "operation": "stream copy, fast-start MP4; no crop, trim, or speed change",
+        "duration": 12.0,
+        "width": 1920,
+        "height": 1080,
+        "fps": 30.0,
+        "bytes": 3285252
+      },
+      "failure": {
+        "deck": "ICRA2027_DSP_video_template.pptx",
+        "slide": 11,
+        "embedded": "ppt/media/media8.mp4",
+        "source_sha256": "f5e2d0c670c730cba707af6c413ef7233ce43f6dcca85d43589a43b26c065507",
+        "path": "static/videos/cola-failure.mp4",
+        "poster": "static/images/videos/cola-failure.jpg",
+        "operation": "stream copy, fast-start MP4; no crop, trim, or speed change",
+        "duration": 12.0,
+        "width": 1920,
+        "height": 1080,
+        "fps": 30.0,
+        "bytes": 2921469
+      }
+    },
+    "drawer": {
+      "success": {
+        "deck": "ICRA2027_DSP_video_template.pptx",
+        "slide": 12,
+        "embedded": "ppt/media/media1.mp4",
+        "source_sha256": "05383f79c7d1477357624ad4ea79b0fa539216bc0a73ec3776359ce9fadc9fd1",
+        "path": "static/videos/drawer-success.mp4",
+        "poster": "static/images/videos/drawer-success.jpg",
+        "operation": "stream copy, fast-start MP4; no crop, trim, or speed change",
+        "duration": 6.033333333333333,
+        "width": 1920,
+        "height": 1080,
+        "fps": 30.0,
+        "bytes": 2601833
+      },
+      "failure": {
+        "deck": "ICRA2027_DSP_video_template.pptx",
+        "slide": 11,
+        "embedded": "ppt/media/media6.mp4",
+        "source_sha256": "8b708d2785789368713009c2af02bc5a697b8cc007f5219ed590515755ec6e1f",
+        "path": "static/videos/drawer-failure.mp4",
+        "poster": "static/images/videos/drawer-failure.jpg",
+        "operation": "stream copy, fast-start MP4; no crop, trim, or speed change",
+        "duration": 12.0,
+        "width": 1920,
+        "height": 1080,
+        "fps": 30.0,
+        "bytes": 2895943
+      }
+    },
+    "sweep": {
+      "success": {
+        "deck": "ICRA2027_DSP_video_template.pptx",
+        "slide": 12,
+        "embedded": "ppt/media/media9.mp4",
+        "source_sha256": "26f399bbb72e69dfd20440943e8000a6efb551be0ea514020b15146559e57b19",
+        "path": "static/videos/sweep-success.mp4",
+        "poster": "static/images/videos/sweep-success.jpg",
+        "operation": "stream copy, fast-start MP4; no crop, trim, or speed change",
+        "duration": 12.0,
+        "width": 1920,
+        "height": 1080,
+        "fps": 30.0,
+        "bytes": 5255411
+      },
+      "failure": {
+        "deck": "ICRA2027_DSP_video_template.pptx",
+        "slide": 11,
+        "embedded": "ppt/media/media7.mp4",
+        "source_sha256": "0de389b8147f0b03bc99d043da5874daa91e4aec534e5c56a7e7ee5c12e6d522",
+        "path": "static/videos/sweep-failure.mp4",
+        "poster": "static/images/videos/sweep-failure.jpg",
+        "operation": "stream copy, fast-start MP4; no crop, trim, or speed change",
+        "duration": 12.0,
+        "width": 1920,
+        "height": 1080,
+        "fps": 30.0,
+        "bytes": 4870327
+      }
+    },
+    "coffee": {
+      "success": {
+        "deck": "ICRA2027_DSP_video_template.pptx",
+        "slide": 12,
+        "embedded": "ppt/media/media4.mp4",
+        "source_sha256": "bbfddafa7ccc7a633e76de4075d4070b15804a69dd8e04c9ad905367c1615dba",
+        "path": "static/videos/coffee-success.mp4",
+        "poster": "static/images/videos/coffee-success.jpg",
+        "operation": "stream copy, fast-start MP4; no crop, trim, or speed change",
+        "duration": 16.5,
+        "width": 960,
+        "height": 544,
+        "fps": 30.0,
+        "bytes": 2090868
+      },
+      "failure": {
+        "deck": "ICRA2027_DSP_video_template.pptx",
+        "slide": 11,
+        "embedded": "ppt/media/media5.mp4",
+        "source_sha256": "2e448f1957aced80aa503e7111a63f10e71b41ad821224163e15fb46a9f78c56",
+        "path": "static/videos/coffee-failure.mp4",
+        "poster": "static/images/videos/coffee-failure.jpg",
+        "operation": "stream copy, fast-start MP4; no crop, trim, or speed change",
+        "duration": 11.966666666666667,
+        "width": 960,
+        "height": 544,
+        "fps": 30.0,
+        "bytes": 1612333
+      }
+    }
+  }
+}

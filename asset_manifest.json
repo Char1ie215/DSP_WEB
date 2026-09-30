@@ -1,0 +1,22 @@
+{
+  "cola": [
+    "static/images/cola-before.png",
+    "static/images/cola-disturbance.png",
+    "static/images/cola-after.png"
+  ],
+  "drawer": [
+    "static/images/drawer-before.png",
+    "static/images/drawer-disturbance.png",
+    "static/images/drawer-after.png"
+  ],
+  "sweep": [
+    "static/images/sweep-before.png",
+    "static/images/sweep-disturbance.png",
+    "static/images/sweep-after.png"
+  ],
+  "coffee": [
+    "static/images/coffee-before.png",
+    "static/images/coffee-disturbance.png",
+    "static/images/coffee-after.png"
+  ]
+}
