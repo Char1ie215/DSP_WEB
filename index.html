@@ -35,7 +35,7 @@
         <a class="button" id="code-link" hidden>Code <span aria-hidden="true">&nearr;</span></a>
         <a class="button secondary" href="#video">Real-world experiments <span aria-hidden="true">&darr;</span></a>
       </div>
-      <nav class="section-links" aria-label="Page sections"><a href="#method">Method</a><a href="#interactive-recovery">Dynamical Field</a><a href="#video">Experiments</a></nav>
+      <nav class="section-links" aria-label="Page sections"><a href="#method">Method</a><a href="#interactive-recovery">Dynamical System</a><a href="#video">Experiments</a></nav>
     </header>
     <section class="container hero-demo" aria-labelledby="teaser-title">
       <p class="teaser-summary" id="teaser-title"><strong>TL;DR:</strong> Recover from a disturbance before asking the policy to plan again.</p>
@@ -51,7 +51,7 @@
       </div>
     </section>
     <section class="container section" id="interactive-recovery" aria-labelledby="interactive-title">
-      <div class="section-intro"><h2 id="interactive-title">What Is a Dynamical Field?</h2><p class="field-explanation">A dynamical field assigns a motion direction and magnitude to each position. When a disturbance triggers recovery, DSP locks the last accepted pose and its execution phase. A field built from predicted motion guides the robot back toward this fixed reference, then the policy replans.</p></div>
+      <div class="section-intro"><h2 id="interactive-title">What Is a Dynamical System?</h2><p class="field-explanation">A dynamical system describes how a state changes over time. Ours specifies how the robot should move from its current position to recover toward a fixed reference.</p></div>
       <div class="recovery-demo">
         <div class="demo-readout"><span id="demo-status" role="status" aria-live="polite">Prediction</span><div><span id="demo-query">Query 1 / K = 16</span><span id="demo-phase">Phase 00 / 48</span></div></div>
         <div class="demo-stage">

@@ -49,7 +49,11 @@ with sync_playwright() as p:
         assert page.locator('table').count() == 0
         assert page.locator('#results, .task-results, .paper-section').count() == 0
         assert page.locator('.method-figure').count() == 1
-        assert page.locator('#interactive-title').inner_text() == 'What Is a Dynamical Field?'
+        assert page.locator('#interactive-title').inner_text() == 'What Is a Dynamical System?'
+        assert page.locator('.field-explanation').inner_text() == (
+            'A dynamical system describes how a state changes over time. '
+            'Ours specifies how the robot should move from its current position to recover toward a fixed reference.'
+        )
         assert page.locator('#abstract, a[href="#abstract"]').count() == 0
         assert page.locator('#recovery-canvas').is_visible()
         assert page.evaluate('typeof window.DSP_RESULTS') == 'undefined'
