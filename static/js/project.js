@@ -24,7 +24,7 @@ window.DSP_PROJECT = {
   ],
   authorNote: '* Equal contribution',
   paper: 'static/papers/paper.pdf',
-  code: '',
+  code: 'https://github.com/Char1ie215/DSP',
   fullVideo: 'static/videos/dsp-overview.mp4',
   teaser: 'static/videos/dsp-overview.mp4',
   teaserPoster: 'static/images/videos/overview.jpg',
